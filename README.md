@@ -5,6 +5,19 @@ Web en HTML y CSS para supervisar una misión a Marte. Incluye cabecera, imagen 
 ## Modo educativo
 Una barra inferior muestra en vivo el ancho de la ventana, la vista (móvil, tablet o escritorio), el número de columnas y el ancho de una tarjeta. El botón "Ver rejilla" dibuja los límites del Grid. Se puede ocultar todo con "Modo educativo".
 
+## Sprints
+
+**Sprint 1 (completado):** maquetación con CSS Grid, unidades relativas, validación a 360 y 1200 px, modo educativo.
+
+**Sprint 2 (completado):**
+- Estados por indicador: Nominal, Aviso y Crítico (texto y color, para no depender solo del color).
+- Telemetría automática con un botón para activarla y detenerla.
+- Registro de misión con los últimos eventos.
+- Accesibilidad: barras con `role="progressbar"` y valores ARIA.
+- El tema elegido se recuerda entre visitas.
+
+**Backlog:** gráfica histórica de cada indicador, alertas sonoras, datos reales de una API de la NASA.
+
 ## Archivos
 - `index.html`: estructura y un script pequeño para el tema y los botones.
 - `style.css`: estilos con CSS Grid y unidades relativas.

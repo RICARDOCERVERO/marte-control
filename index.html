@@ -22,34 +22,36 @@
     </figure>
 
     <main class="indicadores">
-      <article class="tarjeta" style="--valor:78%">
-        <h2>Oxígeno</h2>
-        <p class="dato"><span data-v>78</span>%</p>
-        <div class="barra"><span></span></div>
+      <article class="tarjeta" data-k="oxigeno">
+        <h2>Oxígeno <span class="estado" data-estado>Nominal</span></h2>
+        <p class="dato"><span data-v>0</span>%</p>
+        <div class="barra" role="progressbar" aria-label="Oxígeno" aria-valuemin="0" aria-valuemax="100"><span></span></div>
       </article>
-      <article class="tarjeta" style="--valor:64%">
-        <h2>Energía</h2>
-        <p class="dato"><span data-v>64</span>%</p>
-        <div class="barra"><span></span></div>
+      <article class="tarjeta" data-k="energia">
+        <h2>Energía <span class="estado" data-estado>Nominal</span></h2>
+        <p class="dato"><span data-v>0</span>%</p>
+        <div class="barra" role="progressbar" aria-label="Energía" aria-valuemin="0" aria-valuemax="100"><span></span></div>
       </article>
-      <article class="tarjeta" style="--valor:35%">
-        <h2>Temperatura</h2>
-        <p class="dato"><span data-v>-63</span>°C</p>
-        <div class="barra"><span></span></div>
+      <article class="tarjeta" data-k="temp">
+        <h2>Temperatura <span class="estado" data-estado>Nominal</span></h2>
+        <p class="dato"><span data-v>0</span>°C</p>
+        <div class="barra" role="progressbar" aria-label="Temperatura" aria-valuemin="0" aria-valuemax="100"><span></span></div>
       </article>
-      <article class="tarjeta" style="--valor:52%">
-        <h2>Progreso</h2>
-        <p class="dato"><span data-v>52</span>%</p>
-        <div class="barra"><span></span></div>
+      <article class="tarjeta" data-k="progreso">
+        <h2>Progreso <span class="estado" data-estado>Nominal</span></h2>
+        <p class="dato"><span data-v>0</span>%</p>
+        <div class="barra" role="progressbar" aria-label="Progreso" aria-valuemin="0" aria-valuemax="100"><span></span></div>
       </article>
     </main>
 
     <div class="acciones">
       <button class="boton" id="actualizar" type="button">Simular nueva lectura</button>
+      <button class="boton secundario" id="auto" type="button" aria-pressed="false">Telemetría automática: no</button>
       <button class="boton secundario" id="rejilla" type="button">Ver rejilla</button>
       <button class="boton secundario" id="educativo" type="button">Modo educativo: sí</button>
     </div>
 
+    <div class="paneles">
     <section class="aprende" id="aprende">
       <h2>Qué unidad hace qué</h2>
       <ul>
@@ -60,6 +62,12 @@
       </ul>
       <p>Redimensiona la ventana y mira cómo cambia la sonda inferior.</p>
     </section>
+
+    <section class="registro">
+      <h2>Registro de misión</h2>
+      <ul id="log" aria-live="polite"></ul>
+    </section>
+    </div>
   </div>
 
   <aside class="sonda" id="sonda" aria-live="polite">
@@ -70,37 +78,86 @@
   </aside>
 
   <script>
-    const raiz = document.documentElement;
-    document.getElementById('tema').addEventListener('click', () => {
-      raiz.dataset.tema = raiz.dataset.tema === 'oscuro' ? 'claro' : 'oscuro';
-    });
     const $ = id => document.getElementById(id);
+    const raiz = document.documentElement;
+    const datos = { oxigeno: 78, energia: 64, temp: -63, progreso: 52 };
+    const nombres = { oxigeno: 'Oxígeno', energia: 'Energía', temp: 'Temperatura', progreso: 'Progreso' };
+    const previo = {};
+
+    function estadoDe(k, v) {
+      if (k === 'progreso') return 'ok';
+      if (k === 'temp') return v < -90 ? 'critico' : v < -75 ? 'aviso' : 'ok';
+      return v < 30 ? 'critico' : v < 50 ? 'aviso' : 'ok';
+    }
+    const textos = { ok: 'Nominal', aviso: 'Aviso', critico: 'Crítico' };
+    const pct = (k, v) => k === 'temp' ? Math.round((v + 120) / 120 * 100) : v;
+
+    function registrar(msg) {
+      const li = document.createElement('li');
+      li.textContent = new Date().toLocaleTimeString('es-ES') + ' · ' + msg;
+      const log = $('log');
+      log.prepend(li);
+      while (log.children.length > 6) log.lastChild.remove();
+    }
+
+    function pintar() {
+      document.querySelectorAll('.tarjeta').forEach(t => {
+        const k = t.dataset.k, v = datos[k], p = pct(k, v), est = estadoDe(k, v);
+        t.style.setProperty('--valor', p + '%');
+        t.querySelector('[data-v]').textContent = v;
+        t.querySelector('.barra').setAttribute('aria-valuenow', p);
+        t.dataset.estado = est;
+        t.querySelector('[data-estado]').textContent = textos[est];
+        if (previo[k] && previo[k] !== est) registrar(nombres[k] + ': ' + textos[previo[k]] + ' → ' + textos[est]);
+        previo[k] = est;
+      });
+    }
+
+    function lectura(suave) {
+      for (const k in datos) {
+        if (k === 'temp') datos[k] = Math.max(-120, Math.min(0, datos[k] + Math.round((Math.random() - .5) * (suave ? 8 : 60))));
+        else if (k === 'progreso') datos[k] = Math.min(100, datos[k] + (suave ? 1 : 0));
+        else datos[k] = Math.max(5, Math.min(100, datos[k] + Math.round((Math.random() - .5) * (suave ? 14 : 100))));
+      }
+      pintar();
+    }
+
     function medir() {
       const w = window.innerWidth;
-      const g = document.querySelector('.indicadores');
-      const cols = getComputedStyle(g).gridTemplateColumns.split(' ').length;
-      const t = document.querySelector('.tarjeta').getBoundingClientRect().width;
+      const cols = getComputedStyle(document.querySelector('.indicadores')).gridTemplateColumns.split(' ').length;
       $('ancho').textContent = w;
       $('vista').textContent = w < 480 ? 'Móvil' : w < 900 ? 'Tablet' : 'Escritorio';
       $('cols').textContent = $('cols2').textContent = cols;
-      $('tarj').textContent = Math.round(t);
+      $('tarj').textContent = Math.round(document.querySelector('.tarjeta').getBoundingClientRect().width);
       $('rem').textContent = parseFloat(getComputedStyle(raiz).fontSize);
     }
-    window.addEventListener('resize', medir);
-    medir();
+
+    // Tema (se recuerda entre visitas)
+    try { raiz.dataset.tema = localStorage.getItem('tema') || 'oscuro'; } catch (e) {}
+    $('tema').addEventListener('click', () => {
+      raiz.dataset.tema = raiz.dataset.tema === 'oscuro' ? 'claro' : 'oscuro';
+      try { localStorage.setItem('tema', raiz.dataset.tema); } catch (e) {}
+    });
+
+    $('actualizar').addEventListener('click', () => { lectura(false); registrar('Lectura manual recibida'); });
+
+    let timer = null;
+    $('auto').addEventListener('click', e => {
+      if (timer) { clearInterval(timer); timer = null; }
+      else { timer = setInterval(() => lectura(true), 2000); }
+      e.target.textContent = 'Telemetría automática: ' + (timer ? 'sí' : 'no');
+      e.target.setAttribute('aria-pressed', !!timer);
+      registrar(timer ? 'Telemetría automática activada' : 'Telemetría automática detenida');
+    });
+
     $('rejilla').addEventListener('click', () => document.body.classList.toggle('ver-rejilla'));
     $('educativo').addEventListener('click', e => {
       const off = document.body.classList.toggle('sin-edu');
       e.target.textContent = 'Modo educativo: ' + (off ? 'no' : 'sí');
     });
-    document.getElementById('actualizar').addEventListener('click', () => {
-      document.querySelectorAll('.tarjeta').forEach(t => {
-        const v = Math.round(20 + Math.random() * 80);
-        t.style.setProperty('--valor', v + '%');
-        const n = t.querySelector('[data-v]');
-        n.textContent = t.querySelector('h2').textContent === 'Temperatura' ? Math.round(-120 + v * 0.9) : v;
-      });
-    });
+
+    window.addEventListener('resize', medir);
+    pintar(); medir(); registrar('Conexión con el rover establecida');
   </script>
 </body>
 </html>

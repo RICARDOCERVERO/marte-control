@@ -60,7 +60,13 @@ h1 { font-size: clamp(1.4rem, 5vw, 2.4rem); line-height: 1.15; }
   gap: 0.6rem;
   border: 1px solid var(--pista);
 }
-.tarjeta h2 { font-size: 1rem; color: var(--suave); font-weight: 600; }
+.tarjeta h2 { font-size: 1rem; color: var(--suave); font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
+.estado { font-size: 0.7rem; padding: 0.2em 0.7em; border-radius: 1rem; background: #2e9e5b; color: #fff; }
+.tarjeta[data-estado="aviso"] .estado { background: #d9a400; color: #1a1200; }
+.tarjeta[data-estado="critico"] .estado { background: #d6322f; }
+.tarjeta[data-estado="critico"] { border-color: #d6322f; }
+.tarjeta[data-estado="aviso"] .barra span { background: #d9a400; }
+.tarjeta[data-estado="critico"] .barra span { background: #d6322f; }
 .dato { font-size: 2.2rem; font-weight: 700; }
 
 .barra { width: 100%; height: 0.6rem; background: var(--pista); border-radius: 1rem; overflow: hidden; }
@@ -82,6 +88,10 @@ h1 { font-size: clamp(1.4rem, 5vw, 2.4rem); line-height: 1.15; }
 .boton.secundario { background: transparent; color: var(--texto); border: 1px solid var(--suave); }
 
 /* Capa educativa */
+.paneles { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1rem; }
+.registro { background: var(--tarjeta); border: 1px solid var(--pista); border-radius: 1rem; padding: 1.2em; font-size: 0.9rem; }
+.registro h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+.registro ul { list-style: none; padding: 0; display: grid; gap: 0.3rem; font-family: ui-monospace, monospace; color: var(--suave); }
 .aprende { background: var(--tarjeta); border: 1px dashed var(--acento); border-radius: 1rem; padding: 1.2em; font-size: 0.95rem; }
 .aprende h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
 .aprende ul { padding-left: 1.2rem; display: grid; gap: 0.3rem; margin-bottom: 0.6rem; }
