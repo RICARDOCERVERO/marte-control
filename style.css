@@ -69,6 +69,11 @@ h1 { font-size: clamp(1.4rem, 5vw, 2.4rem); line-height: 1.15; }
 .tarjeta[data-estado="critico"] .barra span { background: #d6322f; }
 .dato { font-size: 2.2rem; font-weight: 700; }
 
+.grafica { width: 100%; height: 2.5rem; display: block; }
+.grafica polyline { fill: none; stroke: var(--acento); stroke-width: 1.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.tarjeta[data-estado="aviso"] .grafica polyline { stroke: #d9a400; }
+.tarjeta[data-estado="critico"] .grafica polyline { stroke: #d6322f; }
+
 .barra { width: 100%; height: 0.6rem; background: var(--pista); border-radius: 1rem; overflow: hidden; }
 .barra span {
   display: block; height: 100%;

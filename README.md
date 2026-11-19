@@ -16,7 +16,9 @@ Una barra inferior muestra en vivo el ancho de la ventana, la vista (móvil, tab
 - Accesibilidad: barras con `role="progressbar"` y valores ARIA.
 - El tema elegido se recuerda entre visitas.
 
-**Backlog:** gráfica histórica de cada indicador, alertas sonoras, datos reales de una API de la NASA.
+**Sprint 3 (completado):** mini gráfica histórica (últimas 20 lecturas) en cada tarjeta, dibujada con SVG. Usa `width: 100%` y `viewBox`, así escala con la tarjeta.
+
+**Backlog:** alertas sonoras, datos reales de una API de la NASA.
 
 ## Archivos
 - `index.html`: estructura y un script pequeño para el tema y los botones.

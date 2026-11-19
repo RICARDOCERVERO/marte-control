@@ -25,21 +25,25 @@
       <article class="tarjeta" data-k="oxigeno">
         <h2>Oxígeno <span class="estado" data-estado>Nominal</span></h2>
         <p class="dato"><span data-v>0</span>%</p>
+        <svg class="grafica" viewBox="0 0 100 30" preserveAspectRatio="none" role="img" aria-label="Histórico"><polyline points=""/></svg>
         <div class="barra" role="progressbar" aria-label="Oxígeno" aria-valuemin="0" aria-valuemax="100"><span></span></div>
       </article>
       <article class="tarjeta" data-k="energia">
         <h2>Energía <span class="estado" data-estado>Nominal</span></h2>
         <p class="dato"><span data-v>0</span>%</p>
+        <svg class="grafica" viewBox="0 0 100 30" preserveAspectRatio="none" role="img" aria-label="Histórico"><polyline points=""/></svg>
         <div class="barra" role="progressbar" aria-label="Energía" aria-valuemin="0" aria-valuemax="100"><span></span></div>
       </article>
       <article class="tarjeta" data-k="temp">
         <h2>Temperatura <span class="estado" data-estado>Nominal</span></h2>
         <p class="dato"><span data-v>0</span>°C</p>
+        <svg class="grafica" viewBox="0 0 100 30" preserveAspectRatio="none" role="img" aria-label="Histórico"><polyline points=""/></svg>
         <div class="barra" role="progressbar" aria-label="Temperatura" aria-valuemin="0" aria-valuemax="100"><span></span></div>
       </article>
       <article class="tarjeta" data-k="progreso">
         <h2>Progreso <span class="estado" data-estado>Nominal</span></h2>
         <p class="dato"><span data-v>0</span>%</p>
+        <svg class="grafica" viewBox="0 0 100 30" preserveAspectRatio="none" role="img" aria-label="Histórico"><polyline points=""/></svg>
         <div class="barra" role="progressbar" aria-label="Progreso" aria-valuemin="0" aria-valuemax="100"><span></span></div>
       </article>
     </main>
@@ -83,6 +87,8 @@
     const datos = { oxigeno: 78, energia: 64, temp: -63, progreso: 52 };
     const nombres = { oxigeno: 'Oxígeno', energia: 'Energía', temp: 'Temperatura', progreso: 'Progreso' };
     const previo = {};
+    const hist = { oxigeno: [], energia: [], temp: [], progreso: [] };
+    const MAX = 20;
 
     function estadoDe(k, v) {
       if (k === 'progreso') return 'ok';
@@ -107,6 +113,9 @@
         t.querySelector('[data-v]').textContent = v;
         t.querySelector('.barra').setAttribute('aria-valuenow', p);
         t.dataset.estado = est;
+        const H = hist[k]; H.push(p); if (H.length > MAX) H.shift();
+        t.querySelector('polyline').setAttribute('points',
+          H.map((y, i) => (H.length < 2 ? 0 : i / (H.length - 1) * 100).toFixed(1) + ',' + (28 - y * 0.26).toFixed(1)).join(' '));
         t.querySelector('[data-estado]').textContent = textos[est];
         if (previo[k] && previo[k] !== est) registrar(nombres[k] + ': ' + textos[previo[k]] + ' → ' + textos[est]);
         previo[k] = est;
