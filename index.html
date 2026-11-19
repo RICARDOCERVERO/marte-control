@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Centro de control de Marte</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="pagina">
+    <header class="cabecera">
+      <div>
+        <h1>Centro de control de Marte</h1>
+        <p class="subtitulo">Misión Ares · Estado del rover en tiempo real</p>
+      </div>
+      <button class="boton" id="tema" type="button" aria-label="Cambiar tema">☀️ / 🌙 Tema</button>
+    </header>
+
+    <figure class="imagen">
+      <img src="marte.svg" alt="Rover explorando la superficie de Marte">
+      <figcaption>Cráter Jezero · Sol 412</figcaption>
+    </figure>
+
+    <main class="indicadores">
+      <article class="tarjeta" style="--valor:78%">
+        <h2>Oxígeno</h2>
+        <p class="dato"><span data-v>78</span>%</p>
+        <div class="barra"><span></span></div>
+      </article>
+      <article class="tarjeta" style="--valor:64%">
+        <h2>Energía</h2>
+        <p class="dato"><span data-v>64</span>%</p>
+        <div class="barra"><span></span></div>
+      </article>
+      <article class="tarjeta" style="--valor:35%">
+        <h2>Temperatura</h2>
+        <p class="dato"><span data-v>-63</span>°C</p>
+        <div class="barra"><span></span></div>
+      </article>
+      <article class="tarjeta" style="--valor:52%">
+        <h2>Progreso</h2>
+        <p class="dato"><span data-v>52</span>%</p>
+        <div class="barra"><span></span></div>
+      </article>
+    </main>
+
+    <div class="acciones">
+      <button class="boton" id="actualizar" type="button">Simular nueva lectura</button>
+    </div>
+  </div>
+
+  <script>
+    const raiz = document.documentElement;
+    document.getElementById('tema').addEventListener('click', () => {
+      raiz.dataset.tema = raiz.dataset.tema === 'oscuro' ? 'claro' : 'oscuro';
+    });
+    document.getElementById('actualizar').addEventListener('click', () => {
+      document.querySelectorAll('.tarjeta').forEach(t => {
+        const v = Math.round(20 + Math.random() * 80);
+        t.style.setProperty('--valor', v + '%');
+        const n = t.querySelector('[data-v]');
+        n.textContent = t.querySelector('h2').textContent === 'Temperatura' ? Math.round(-120 + v * 0.9) : v;
+      });
+    });
+  </script>
+</body>
+</html>

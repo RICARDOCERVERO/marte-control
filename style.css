@@ -1,0 +1,87 @@
+:root {
+  --fondo: #14090d; --tarjeta: #24131a; --texto: #f5ece6;
+  --suave: #c9b3a8; --acento: #e0673a; --pista: #3a2430;
+}
+[data-tema="claro"] {
+  --fondo: #f6efe9; --tarjeta: #ffffff; --texto: #2a1218;
+  --suave: #6b5249; --acento: #9b2335; --pista: #e6d8d0;
+}
+
+* { box-sizing: border-box; margin: 0; }
+
+html { font-size: 100%; }
+
+body {
+  font-family: system-ui, "Segoe UI", sans-serif;
+  background: var(--fondo);
+  color: var(--texto);
+  line-height: 1.5;
+}
+
+/* Contenedor: % + max-width para que el ancho dependa de la pantalla */
+.pagina {
+  width: 94%;
+  max-width: 75rem;
+  margin-inline: auto;
+  padding-block: 1.5rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.cabecera {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1rem;
+}
+h1 { font-size: clamp(1.4rem, 5vw, 2.4rem); line-height: 1.15; }
+.subtitulo { color: var(--suave); font-size: 0.95rem; }
+
+.imagen { position: relative; border-radius: 1rem; overflow: hidden; }
+.imagen img { display: block; width: 100%; height: auto; max-height: 22rem; object-fit: cover; }
+.imagen figcaption {
+  position: absolute; left: 0; bottom: 0;
+  padding: 0.4em 0.9em; font-size: 0.85rem;
+  background: rgb(0 0 0 / .55); color: #fff;
+}
+
+/* Cuadrícula responsive: auto-fit + minmax + fr */
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+
+.tarjeta {
+  background: var(--tarjeta);
+  padding: 1.2em;               /* em: respeta el tamaño de la tarjeta */
+  border-radius: 1rem;
+  display: grid;
+  gap: 0.6rem;
+  border: 1px solid var(--pista);
+}
+.tarjeta h2 { font-size: 1rem; color: var(--suave); font-weight: 600; }
+.dato { font-size: 2.2rem; font-weight: 700; }
+
+.barra { width: 100%; height: 0.6rem; background: var(--pista); border-radius: 1rem; overflow: hidden; }
+.barra span {
+  display: block; height: 100%;
+  width: var(--valor);          /* %: relativo a la pista */
+  background: var(--acento);
+  transition: width .5s ease;
+}
+
+.boton {
+  background: var(--acento); color: #fff; border: 0; cursor: pointer;
+  padding: 0.7em 1.2em; border-radius: 0.6rem;
+  font: inherit; font-weight: 600;
+}
+.boton:hover { filter: brightness(1.12); }
+.boton:focus-visible { outline: 3px solid var(--texto); outline-offset: 2px; }
+.acciones { display: grid; justify-items: start; }
+
+/* Móvil: cabecera en una columna */
+@media (max-width: 30rem) {
+  .cabecera { grid-template-columns: 1fr; }
+  .acciones, .acciones .boton { width: 100%; }
+}
