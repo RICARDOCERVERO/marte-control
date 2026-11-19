@@ -2,6 +2,9 @@
 
 Web en HTML y CSS para supervisar una misión a Marte. Incluye cabecera, imagen y cuatro indicadores: oxígeno, energía, temperatura y progreso. Hay un selector de tema claro y oscuro y un botón que simula nuevas lecturas.
 
+## Modo educativo
+Una barra inferior muestra en vivo el ancho de la ventana, la vista (móvil, tablet o escritorio), el número de columnas y el ancho de una tarjeta. El botón "Ver rejilla" dibuja los límites del Grid. Se puede ocultar todo con "Modo educativo".
+
 ## Archivos
 - `index.html`: estructura y un script pequeño para el tema y los botones.
 - `style.css`: estilos con CSS Grid y unidades relativas.

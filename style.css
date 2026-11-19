@@ -78,7 +78,26 @@ h1 { font-size: clamp(1.4rem, 5vw, 2.4rem); line-height: 1.15; }
 }
 .boton:hover { filter: brightness(1.12); }
 .boton:focus-visible { outline: 3px solid var(--texto); outline-offset: 2px; }
-.acciones { display: grid; justify-items: start; }
+.acciones { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.boton.secundario { background: transparent; color: var(--texto); border: 1px solid var(--suave); }
+
+/* Capa educativa */
+.aprende { background: var(--tarjeta); border: 1px dashed var(--acento); border-radius: 1rem; padding: 1.2em; font-size: 0.95rem; }
+.aprende h2 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+.aprende ul { padding-left: 1.2rem; display: grid; gap: 0.3rem; margin-bottom: 0.6rem; }
+.aprende p { color: var(--suave); }
+
+.sonda {
+  position: fixed; inset: auto 0 0 0;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 0.3rem 1.2rem;
+  padding: 0.6em 1em; font-size: 0.85rem;
+  background: var(--acento); color: #fff; z-index: 10;
+}
+.pagina { padding-bottom: 5rem; }
+
+.ver-rejilla .indicadores { outline: 2px dashed var(--acento); outline-offset: 0.4rem; }
+.ver-rejilla .tarjeta { outline: 2px dashed #4ac0ff; }
+.sin-edu .sonda, .sin-edu .aprende { display: none; }
 
 /* Móvil: cabecera en una columna */
 @media (max-width: 30rem) {

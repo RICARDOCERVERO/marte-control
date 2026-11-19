@@ -46,13 +46,52 @@
 
     <div class="acciones">
       <button class="boton" id="actualizar" type="button">Simular nueva lectura</button>
+      <button class="boton secundario" id="rejilla" type="button">Ver rejilla</button>
+      <button class="boton secundario" id="educativo" type="button">Modo educativo: sí</button>
     </div>
+
+    <section class="aprende" id="aprende">
+      <h2>Qué unidad hace qué</h2>
+      <ul>
+        <li><strong>rem</strong>: tipografía y espacios. Hoy 1rem = <span id="rem">16</span> px.</li>
+        <li><strong>fr</strong>: reparte el espacio libre entre columnas. Hoy hay <span id="cols">4</span> columna(s).</li>
+        <li><strong>%</strong>: ancho de la página (94%) y de las barras.</li>
+        <li><strong>em</strong>: padding de tarjetas y botones.</li>
+      </ul>
+      <p>Redimensiona la ventana y mira cómo cambia la sonda inferior.</p>
+    </section>
   </div>
+
+  <aside class="sonda" id="sonda" aria-live="polite">
+    <span>Ancho: <b id="ancho">0</b> px</span>
+    <span>Vista: <b id="vista">-</b></span>
+    <span>Columnas: <b id="cols2">0</b></span>
+    <span>Tarjeta: <b id="tarj">0</b> px</span>
+  </aside>
 
   <script>
     const raiz = document.documentElement;
     document.getElementById('tema').addEventListener('click', () => {
       raiz.dataset.tema = raiz.dataset.tema === 'oscuro' ? 'claro' : 'oscuro';
+    });
+    const $ = id => document.getElementById(id);
+    function medir() {
+      const w = window.innerWidth;
+      const g = document.querySelector('.indicadores');
+      const cols = getComputedStyle(g).gridTemplateColumns.split(' ').length;
+      const t = document.querySelector('.tarjeta').getBoundingClientRect().width;
+      $('ancho').textContent = w;
+      $('vista').textContent = w < 480 ? 'Móvil' : w < 900 ? 'Tablet' : 'Escritorio';
+      $('cols').textContent = $('cols2').textContent = cols;
+      $('tarj').textContent = Math.round(t);
+      $('rem').textContent = parseFloat(getComputedStyle(raiz).fontSize);
+    }
+    window.addEventListener('resize', medir);
+    medir();
+    $('rejilla').addEventListener('click', () => document.body.classList.toggle('ver-rejilla'));
+    $('educativo').addEventListener('click', e => {
+      const off = document.body.classList.toggle('sin-edu');
+      e.target.textContent = 'Modo educativo: ' + (off ? 'no' : 'sí');
     });
     document.getElementById('actualizar').addEventListener('click', () => {
       document.querySelectorAll('.tarjeta').forEach(t => {
